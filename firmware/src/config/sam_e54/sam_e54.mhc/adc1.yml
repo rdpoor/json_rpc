@@ -102,6 +102,15 @@ children:
       children:
       - type: Dynamic
         attributes: {id: adc1, value: ADC1_ConversionStatusGet}
+  - type: Comment
+    attributes: {id: ADC_SAMPCTRL_SAMPLEN_TIME}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: text}
+        children:
+        - {type: Value, value: '**** Conversion Time is 2.13333333333 uS ****'}
   - type: String
     attributes: {id: ADC_START_API}
     children:

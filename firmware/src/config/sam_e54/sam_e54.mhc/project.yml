@@ -167,13 +167,13 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: E3D110ED5C397D12547FDCD1A7815BC8
-- generatedChecksum: D6F59006EE1EE40B0184F346BE6D7E4C
+- generatedChecksum: 3461731AD57152A7616FD22C4F6AD784
   logicalPath: config/sam_e54/peripheral/sercom/usart
   name: plib_sercom0_usart.c
   physicalPath: peripheral/sercom/usart
   security: NON_SECURE
   type: SOURCE
-  userChecksum: D6F59006EE1EE40B0184F346BE6D7E4C
+  userChecksum: 3461731AD57152A7616FD22C4F6AD784
 - generatedChecksum: 4899886726110742DF8780F10632B48A
   logicalPath: config/sam_e54/peripheral/sercom/usart
   name: plib_sercom2_usart.c

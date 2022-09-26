@@ -50,9 +50,9 @@ corresponding code that parses JSON RPC strings and calls local C function.
 
 ### Hardware / Driver notes
 
-[ATSAME54P20A Product Page](https://www.microchip.com/en-us/product/ATSAME54P20A)
-[SAM E54 Xplained Pro User's Guide](https://ww1.microchip.com/downloads/en/DeviceDoc/70005321A.pdf)
-[SAM D5X/E5X Family Datasheet](https://ww1.microchip.com/downloads/aemDocuments/documents/MCU32/ProductDocuments/DataSheets/SAM_D5x_E5x_Family_Data_Sheet_DS60001507G.pdf)
+* [ATSAME54P20A Product Page](https://www.microchip.com/en-us/product/ATSAME54P20A)
+* [SAM E54 Xplained Pro User's Guide](https://ww1.microchip.com/downloads/en/DeviceDoc/70005321A.pdf)
+* [SAM D5X/E5X Family Datasheet](https://ww1.microchip.com/downloads/aemDocuments/documents/MCU32/ProductDocuments/DataSheets/SAM_D5x_E5x_Family_Data_Sheet_DS60001507G.pdf)
 
 [I/O1 Xplained Pro](https://www.microchip.com/mymicrochip/filehandler.aspx?ddocname=en589640)
 

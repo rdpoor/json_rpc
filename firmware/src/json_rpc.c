@@ -44,6 +44,11 @@
 
 #define JSMN_TOKEN_COUNT 10 // max # of json tokens expected in a message
 
+/**
+ * @brief Low order 32 bits of the processor id.
+ */
+#define PROCESSOR_ID3 (0x00806018)
+
 // *****************************************************************************
 // Private (static) storage
 
@@ -59,6 +64,7 @@ static void light_sensor_state(float value);
 static void button_state(bool value);
 static float lerp(float x, float x0, float x1, float y0, float y1);
 static float clamp(float x, float xlo, float xhi);
+static uint32_t processor_id(void);
 
 // *****************************************************************************
 // Public code
@@ -116,7 +122,7 @@ const char *json_rpc_get_msg(char *buf, size_t buflen) {
   }
 
   *p = '\0'; // always null terminate
-  printf("\njson_rpc_get_msg received `%s`", buf); // debugging
+  printf("\n%08lx << `%s`", processor_id(), buf);
   return buf;
 }
 
@@ -209,7 +215,7 @@ const char *json_rpc_construct_light_sensor_state_msg(char *buf,
 
 // NOTE: json_msg MUST be null terminated
 void json_rpc_xmit_msg(const char *json_msg) {
-  printf("\njson_rpc_get_msg sending `%s`", json_msg); // debugging
+  printf("\n%08lx >> `%s`", processor_id(), json_msg); // debugging
   DRV_USART_WriteBuffer(s_usart_handle, (void *)json_msg, strlen(json_msg));
 }
 
@@ -248,6 +254,10 @@ static float clamp(float x, float xlo, float xhi) {
   } else {
     return x;
   }
+}
+
+static uint32_t processor_id(void) {
+  return *(uint32_t *)PROCESSOR_ID3;
 }
 
 // *****************************************************************************
