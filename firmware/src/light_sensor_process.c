@@ -1,5 +1,5 @@
 /**
- * @file sensor_task.c
+ * @file light_sensor_process.c
  *
  * MIT License
  *
@@ -28,22 +28,15 @@
 // *****************************************************************************
 // Includes
 
-#include "sensor_thread.h"
+#include "light_sensor_process.h"
 
 #include "demo_bsp.h"
-#include "demo_impl.h"   // TODO: refactor for transport layer
 #include "light_sensor.h"
-#include "FreeRTOS.h"
-#include "task.h"
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
 
 // *****************************************************************************
 // Private types and definitions
-
-#define MAX_MSG_LEN 100
-#define SENSOR_THREAD_SAMPLING_RATE_IN_MSEC 1000
 
 // *****************************************************************************
 // Private (static) storage
@@ -54,22 +47,10 @@
 // *****************************************************************************
 // Public code
 
-void SENSOR_THREAD_Initialize ( void ) {
-  // Nothing at present
-}
-
-void SENSOR_THREAD_Tasks ( void )
-{
-    light_sensor_t light_sensor;
-    
-  // Block until it is time to read light level
-  vTaskDelay(SENSOR_THREAD_SAMPLING_RATE_IN_MSEC/portTICK_PERIOD_MS);
-  light_sensor.intensity = demo_bsp_light_level();
-  light_sensor.timestamp = demo_bsp_timestamp();
-
-  demo_bsp_xmt_reset();
-  light_sensor_encode(&light_sensor, demo_jems_instance());
-  demo_bsp_xmt();
+void light_sensor_process(light_sensor_t *state) {
+  // Called when the local receives a light_sensor message from the remote. For
+  // this demo, we set the PWM LED to track the intensity of the remote sensor.
+  demo_bsp_pwm_led_set(state->intensity);
 }
 
 // *****************************************************************************

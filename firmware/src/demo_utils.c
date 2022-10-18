@@ -1,5 +1,5 @@
 /**
- * @file sensor_task.c
+ * @file demo_utils.c
  *
  * MIT License
  *
@@ -28,22 +28,13 @@
 // *****************************************************************************
 // Includes
 
-#include "sensor_thread.h"
+#include "demo_utils.h"
 
-#include "demo_bsp.h"
-#include "demo_impl.h"   // TODO: refactor for transport layer
-#include "light_sensor.h"
-#include "FreeRTOS.h"
-#include "task.h"
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
 
 // *****************************************************************************
 // Private types and definitions
-
-#define MAX_MSG_LEN 100
-#define SENSOR_THREAD_SAMPLING_RATE_IN_MSEC 1000
 
 // *****************************************************************************
 // Private (static) storage
@@ -54,22 +45,18 @@
 // *****************************************************************************
 // Public code
 
-void SENSOR_THREAD_Initialize ( void ) {
-  // Nothing at present
+float demo_utils_lerp(float x, float x0, float x1, float y0, float y1) {
+  return y0 + (x-x0)*(y1-y0)/(x1-x0);
 }
 
-void SENSOR_THREAD_Tasks ( void )
-{
-    light_sensor_t light_sensor;
-    
-  // Block until it is time to read light level
-  vTaskDelay(SENSOR_THREAD_SAMPLING_RATE_IN_MSEC/portTICK_PERIOD_MS);
-  light_sensor.intensity = demo_bsp_light_level();
-  light_sensor.timestamp = demo_bsp_timestamp();
-
-  demo_bsp_xmt_reset();
-  light_sensor_encode(&light_sensor, demo_jems_instance());
-  demo_bsp_xmt();
+float demo_utils_clamp(float x, float xlo, float xhi) {
+  if (x < xlo) {
+    return xlo;
+  } else if (x > xhi) {
+    return xhi;
+  } else {
+    return x;
+  }
 }
 
 // *****************************************************************************

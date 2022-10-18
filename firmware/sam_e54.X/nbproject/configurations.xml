@@ -114,6 +114,9 @@
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
+      <logicalFolder name="jems" displayName="jems" projectFiles="true">
+        <itemPath>../src/jems/jems.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="f2" displayName="packs" projectFiles="true">
         <logicalFolder name="f1" displayName="ATSAME54P20A_DFP" projectFiles="true">
           <logicalFolder name="f1" displayName="component" projectFiles="true">
@@ -246,9 +249,17 @@
       </logicalFolder>
       <itemPath>../src/button_thread.h</itemPath>
       <itemPath>../src/jsmn.h</itemPath>
-      <itemPath>../src/json_rpc.h</itemPath>
       <itemPath>../src/listen_thread.h</itemPath>
       <itemPath>../src/sensor_thread.h</itemPath>
+      <itemPath>../src/jrpc.h</itemPath>
+      <itemPath>../src/demo_impl.h</itemPath>
+      <itemPath>../src/light_sensor.h</itemPath>
+      <itemPath>../src/light_sensor_process.h</itemPath>
+      <itemPath>../src/user_button.h</itemPath>
+      <itemPath>../src/user_button_process.h</itemPath>
+      <itemPath>../src/demo_bsp.h</itemPath>
+      <itemPath>../src/demo_defs.h</itemPath>
+      <itemPath>../src/demo_utils.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -351,12 +362,22 @@
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/stream_buffer.c</itemPath>
         </logicalFolder>
       </logicalFolder>
+      <logicalFolder name="jems" displayName="jems" projectFiles="true">
+        <itemPath>../src/jems/jems.c</itemPath>
+      </logicalFolder>
       <itemPath>../src/button_thread.c</itemPath>
       <itemPath>../src/jsmn.c</itemPath>
-      <itemPath>../src/json_rpc.c</itemPath>
       <itemPath>../src/listen_thread.c</itemPath>
       <itemPath>../src/sensor_thread.c</itemPath>
       <itemPath>../src/main_sam_e54.c</itemPath>
+      <itemPath>../src/jrpc.c</itemPath>
+      <itemPath>../src/demo_impl.c</itemPath>
+      <itemPath>../src/light_sensor.c</itemPath>
+      <itemPath>../src/light_sensor_process.c</itemPath>
+      <itemPath>../src/user_button.c</itemPath>
+      <itemPath>../src/user_button_process.c</itemPath>
+      <itemPath>../src/demo_bsp.c</itemPath>
+      <itemPath>../src/demo_utils.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -465,7 +486,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/config/sam_e54;../src/packs/ATSAME54P20A_DFP;../src/packs/CMSIS/;../src/packs/CMSIS/CMSIS/Core/Include;../src/third_party/rtos/FreeRTOS/Source/include;../src/third_party/rtos/FreeRTOS/Source/portable/GCC/SAM/ARM_CM4F"/>
+                  value="../src;../src/config/sam_e54;../src/packs/ATSAME54P20A_DFP;../src/packs/CMSIS/;../src/packs/CMSIS/CMSIS/Core/Include;../src/third_party/rtos/FreeRTOS/Source/include;../src/third_party/rtos/FreeRTOS/Source/portable/GCC/SAM/ARM_CM4F;../src/jems"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>

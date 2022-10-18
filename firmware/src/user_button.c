@@ -1,5 +1,5 @@
 /**
- * @file sensor_task.c
+ * @file user_button.c
  *
  * MIT License
  *
@@ -28,22 +28,15 @@
 // *****************************************************************************
 // Includes
 
-#include "sensor_thread.h"
-
-#include "demo_bsp.h"
-#include "demo_impl.h"   // TODO: refactor for transport layer
-#include "light_sensor.h"
-#include "FreeRTOS.h"
-#include "task.h"
+#include "user_button.h"
+#include "user_button_process.h"
+#include "jems.h"
+#include "jrpc.h"
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
 
 // *****************************************************************************
 // Private types and definitions
-
-#define MAX_MSG_LEN 100
-#define SENSOR_THREAD_SAMPLING_RATE_IN_MSEC 1000
 
 // *****************************************************************************
 // Private (static) storage
@@ -54,22 +47,39 @@
 // *****************************************************************************
 // Public code
 
-void SENSOR_THREAD_Initialize ( void ) {
-  // Nothing at present
+void user_button_encode(user_button_t *state, jems_t *jems) {
+  jems_reset(jems);
+  jems_object_open(jems);
+  jems_string(jems, "fn");
+  jems_string(jems, "user_button");
+  jems_string(jems, "args");
+  jems_object_open(jems);
+  jems_string(jems, "timestamp");
+  jems_integer(jems, state->timestamp);
+  jems_string(jems, "is_pressed");
+  jems_bool(jems, state->is_pressed);
+  jems_object_close(jems);
+  jems_object_close(jems);
 }
 
-void SENSOR_THREAD_Tasks ( void )
-{
-    light_sensor_t light_sensor;
-    
-  // Block until it is time to read light level
-  vTaskDelay(SENSOR_THREAD_SAMPLING_RATE_IN_MSEC/portTICK_PERIOD_MS);
-  light_sensor.intensity = demo_bsp_light_level();
-  light_sensor.timestamp = demo_bsp_timestamp();
-
-  demo_bsp_xmt_reset();
-  light_sensor_encode(&light_sensor, demo_jems_instance());
-  demo_bsp_xmt();
+bool user_button_decode(jrpc_t *jrpc) {
+  user_button_t state;
+  if (jrpc_token_count(jrpc) != 9) {   // (4 args * 2) + 5 = 9
+    return false;
+  } else if (!jrpc_string_matches(jrpc, 2, "user_button")) {
+    return false;
+  } else if (!jrpc_string_matches(jrpc, 5, "timestamp")) {
+    return false;
+  } else if (!jrpc_parse_integer(jrpc, 6, &state.timestamp)) {
+    return false;
+  } else if (!jrpc_string_matches(jrpc, 7, "is_pressed")) {
+    return false;
+  } else if (!jrpc_parse_bool(jrpc, 8, &state.is_pressed)) {
+    return false;
+  } else {
+    user_button_process(&state);
+    return true;
+  }
 }
 
 // *****************************************************************************

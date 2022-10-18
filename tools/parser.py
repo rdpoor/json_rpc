@@ -1,6 +1,64 @@
 import json
 from cffi import FFI
 
+"""
+Overview
+
+Given a C structure that contains some local state, such as:
+
+    typedef struct {
+      timestamp_t timestamp;
+      bool is_pressed;
+    } button_state_t;
+
+... generate C code encoder and decoder functions along these lines:
+
+// emits a JSON string like:
+//
+// {"fn": "button_state", "args":{"timestamp": 987654321, "is_pressed":true}}
+//
+// Here is the generated encoder:
+//
+void button_state_encode(button_state_t *state, jems_t *jems) {
+  jems_reset(jems);
+  jems_object_open(jems);
+  jems_string(jems, "fn");
+  jems_string(jems, "button_state");
+  jems_string(jems, "args");
+  jems_object_open(jems);
+  jems_string(jems, "timestamp");
+  jems_integer(jems, state->timestamp);
+  jems_bool(jems, state->is_pressed);
+  jems_object_close(jems);
+  jems_object_close(jems);
+}
+
+// Here is the generated decoder.  Note that it returns true iff the JSON string
+// matches the function signature.
+//
+bool button_state_decode(button_state_t *state, jrpc_t *jrpc) {
+  // jrpc_parse is common to all decoders -- called previously.
+  // By the time we get here, we know that the json string has "fn" and "args"
+  // tokens in the right positions.  Check the button_state specific tokens.
+  if (jrpc_token_count(jrpc) != 9) {   // 5 + 2n, where n is # of args
+    return false;
+  } else if (!jrpc_token_match(jrpc, 2, "button_state")) {
+    return false;
+  } else if (!jrpc_token_match(jrpc, 5, "timestamp") {
+    return false;
+  } else if (!jrpc_parse_integer(jrpc, 6, &state->timestamp)) {
+    return false;
+  } else if (!jrpc_token_match(jrpc, 7, "is_pressed")) {
+    return false;
+  } else if (!jrpc_parse_bool(jrpc, 8, &state->is_pressed)) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+"""
+
 ffi = FFI()
 ffi.cdef("""
 // ffi.typeof('timestamp_t').kind = 'primitive'

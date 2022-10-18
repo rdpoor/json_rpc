@@ -30,8 +30,11 @@
 
 #include "button_thread.h"
 
+#include "demo_bsp.h"
+#include "demo_impl.h"   // TODO: refactor for transport layer
+#include "definitions.h"
+#include "user_button.h"
 #include "FreeRTOS.h"
-#include "json_rpc.h"
 #include "task.h"
 #include <stdbool.h>
 #include <stdint.h>
@@ -39,12 +42,8 @@
 // *****************************************************************************
 // Private types and definitions
 
-#define MAX_MSG_LEN 100
-
 // *****************************************************************************
 // Private (static) storage
-
-static char s_msg_buf[MAX_MSG_LEN];
 
 extern TaskHandle_t xBUTTON_THREAD_Tasks;  // defined in tasks.c
 
@@ -54,21 +53,22 @@ extern TaskHandle_t xBUTTON_THREAD_Tasks;  // defined in tasks.c
 // *****************************************************************************
 // Public code
 
-void BUTTON_THREAD_Initialize ( void )
-{
-  json_rpc_init();
+void BUTTON_THREAD_Initialize ( void ) {
+    // Nothing yet.
 }
 
-void BUTTON_THREAD_Tasks ( void )
-{
-  // block here until ISR wakes us, then read button state and generate a
-  // JSON RPC message.
+void BUTTON_THREAD_Tasks ( void ) {
+  user_button_t user_button;
+
+  // block here until ISR wakes us, then encode and transmit button state.
   ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-  bool button_state = json_rpc_button_read();
-  const char *json_msg = json_rpc_construct_button_state_msg(s_msg_buf,
-                                                             MAX_MSG_LEN,
-                                                             button_state);
-  json_rpc_xmit_msg(json_msg);
+
+  user_button.is_pressed = demo_bsp_button_is_pressed();
+  user_button.timestamp = demo_bsp_timestamp();
+
+  demo_bsp_xmt_reset();
+  user_button_encode(&user_button, demo_jems_instance());
+  demo_bsp_xmt();
 }
 
 void BUTTON_THREAD_Isr(uintptr_t ctx) {
@@ -78,7 +78,6 @@ void BUTTON_THREAD_Isr(uintptr_t ctx) {
   vTaskNotifyGiveFromISR(xBUTTON_THREAD_Tasks, &xHigherPriorityTaskWoken);
   portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
-
 
 // *****************************************************************************
 // Private (static) code

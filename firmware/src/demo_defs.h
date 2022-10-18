@@ -1,5 +1,5 @@
 /**
- * @file sensor_task.c
+ * @file service_defs.h
  *
  * MIT License
  *
@@ -22,58 +22,52 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
+
+ /**
+  * @brief Define the RPC services
+  *
+  * NOTE: This file will be parsed by rpc_parser.py and only recognizes a
+  * limited number of C constructs.
+  */
+
+#ifndef _DEMO_DEFS_H_
+#define _DEMO_DEFS_H_
 
 // *****************************************************************************
 // Includes
 
-#include "sensor_thread.h"
-
-#include "demo_bsp.h"
-#include "demo_impl.h"   // TODO: refactor for transport layer
-#include "light_sensor.h"
-#include "FreeRTOS.h"
-#include "task.h"
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
 
 // *****************************************************************************
-// Private types and definitions
+// C++ compatibility
 
-#define MAX_MSG_LEN 100
-#define SENSOR_THREAD_SAMPLING_RATE_IN_MSEC 1000
-
-// *****************************************************************************
-// Private (static) storage
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 // *****************************************************************************
-// Private (static, forward) declarations
+// Public types and definitions
+
+typedef struct {
+  uint64_t timestamp;
+  bool is_pressed;
+} user_button_t;
+
+typedef struct {
+  uint64_t timestamp;
+  double intensity;
+} light_sensor_t;
 
 // *****************************************************************************
-// Public code
-
-void SENSOR_THREAD_Initialize ( void ) {
-  // Nothing at present
-}
-
-void SENSOR_THREAD_Tasks ( void )
-{
-    light_sensor_t light_sensor;
-    
-  // Block until it is time to read light level
-  vTaskDelay(SENSOR_THREAD_SAMPLING_RATE_IN_MSEC/portTICK_PERIOD_MS);
-  light_sensor.intensity = demo_bsp_light_level();
-  light_sensor.timestamp = demo_bsp_timestamp();
-
-  demo_bsp_xmt_reset();
-  light_sensor_encode(&light_sensor, demo_jems_instance());
-  demo_bsp_xmt();
-}
-
-// *****************************************************************************
-// Private (static) code
+// Public declarations
 
 // *****************************************************************************
 // End of file
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* #ifndef _DEMO_DEFS_H_ */

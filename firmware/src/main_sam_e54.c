@@ -22,6 +22,8 @@
 // *****************************************************************************
 // *****************************************************************************
 
+#include "demo_bsp.h"
+#include "demo_impl.h"
 #include <stddef.h>                     // Defines NULL
 #include <stdbool.h>                    // Defines true
 #include <stdlib.h>                     // Defines EXIT_FAILURE
@@ -38,6 +40,8 @@ int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
+    demo_bsp_init();   // TODO: is this the right place in a FreeRTOS app?
+    demo_init();       // Needs refactoring: conflating app and runtime support
 
     while ( true )
     {
@@ -54,4 +58,3 @@ int main ( void )
 /*******************************************************************************
  End of File
 */
-

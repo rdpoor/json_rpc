@@ -7,7 +7,7 @@
 
 #define JSMN_TOKEN_COUNT 10 // max # of json tokens expected in a message
 
-const char *str1 = "{\"fn\":\"light_sensor_status\", \"args\":[1.23456]}\n";
+const char *str1 = "{\"fn\":\"light_sensor\", \"args\":{\"timestamp\": 987654321, \"value\":1.23456}}\n";
 
 static jsmntok_t s_jsmn_tokens[JSMN_TOKEN_COUNT];
 static jsmn_parser s_jsmn_parser;

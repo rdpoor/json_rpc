@@ -30,7 +30,9 @@
 
 #include "listen_thread.h"
 
-#include "json_rpc.h"
+#include "demo_bsp.h"
+#include "demo_impl.h"
+#include <string.h>
 
 // *****************************************************************************
 // Private types and definitions
@@ -49,16 +51,15 @@ static char s_msg_buf[MAX_MSG_LEN];
 // Public code
 
 void LISTEN_THREAD_Initialize(void) {
-    json_rpc_init();
+    // nothing yet.
 }
 
 void LISTEN_THREAD_Tasks(void) {
   // block until a JSON RPC message is available.
-  const char *msg = json_rpc_get_msg(s_msg_buf,
-                                     MAX_MSG_LEN);
-  // perform the RPC function
+  const char *msg = demo_bsp_gets(s_msg_buf, MAX_MSG_LEN);
+  // decode the message and dispatch
   if (msg) {
-    json_rpc_parse_and_call(msg);
+      demo_decode(s_msg_buf, strlen(s_msg_buf));
   } else {
     // parser error...
     asm("nop");
